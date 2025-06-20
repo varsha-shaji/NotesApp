@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | Notes App</title>
+    <style>
+        body {
+            background-image: url("{% static 'indexbg.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .welcome-container {
+            padding: 48px 36px 36px 36px;
+            text-align: center;
+            max-width: 420px;
+        }
+        .welcome-title {
+            font-size: 2.5rem;
+            color: #a18ab7;
+            font-weight: 700;
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInDown 1s 0.2s forwards;
+        }
+        .welcome-quote {
+            font-size: 1.1rem;
+            color: #8fa88f;
+            margin-bottom: 32px;
+            font-style: italic;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s 0.8s forwards;
+        }
+        .login-btn {
+            padding: 14px 36px;
+            background: #a18ab7;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(161, 196, 253, 0.12);
+            transition: background 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            animation: fadeIn 1s 1.5s forwards;
+        }
+        .login-btn:hover {
+            background: #8d72b1;
+            box-shadow: 0 4px 16px rgba(251, 194, 235, 0.18);
+        }
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome-title">Welcome to Notes App</div>
+        <div class="welcome-quote">"Take your notes with us and let your ideas blossom every day."</div>
+        <a class="login-btn" style="text-decoration: none; color: white;" href="{% url 'login' %}">Login</a>
+    </div>
+</body>
+</html>

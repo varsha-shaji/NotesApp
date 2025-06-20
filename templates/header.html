@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Notes App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-image: url("{% static 'dashboardbg.jpg' %}");
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            color: #111;
+        }
+        h1, h2, h3, h4, h5, h6, .main .welcome, .main .subtitle, .sidebar .user .username, .sidebar nav a, .note-title, .note-meta, .note-content, .note-tags, .note-label, .logout-btn, .filter-bar label, .filter-bar select, .filter-bar button {
+            color: #111 !important;
+        }
+        .sidebar {
+            width: 240px;
+            background: #fff0f6;
+            box-shadow: 2px 0 16px rgba(200, 180, 255, 0.10);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 0 24px 0;
+            border-top-right-radius: 32px;
+            border-bottom-right-radius: 32px;
+        }
+        .sidebar .user {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        .sidebar .user .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #e6d6f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: #a18ab7;
+            margin: 0 auto 10px auto;
+        }
+        .sidebar .user .username {
+            font-size: 1.1rem;
+            color: #a18ab7;
+            font-weight: 600;
+        }
+        .sidebar nav {
+            width: 100%;
+        }
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            padding: 14px 32px;
+            color: #8fa88f;
+            text-decoration: none;
+            font-size: 1.08rem;
+            border-radius: 8px 0 0 8px;
+            margin-bottom: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar nav a.active, .sidebar nav a:hover {
+            background: #e6d6f3;
+            color: #a18ab7;
+        }
+        .sidebar nav a i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+        .logout-btn {
+            margin-top: auto;
+            padding: 16px 0;
+            background: #a18ab7;
+            color: #fff !important;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(161, 140, 209, 0.10);
+            transition: background 0.3s;
+            width: 100%;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .logout-btn:hover {
+            background: #8d72b1;
+        }
+        .main {
+            flex: 1;
+            padding: 48px 5vw 32px 5vw;
+            display: flex;
+            flex-direction: column;
+        }
+        .main .welcome {
+            font-size: 2rem;
+            color: #a18ab7;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .main .subtitle {
+            color: #8fa88f;
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+        }
+        .notes-section {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(200, 180, 255, 0.10);
+            padding: 32px;
+            min-height: 200px;
+        }
+        @media (max-width: 900px) {
+            .sidebar { width: 70px; padding: 16px 0; }
+            .sidebar .user .username { display: none; }
+            .sidebar nav a span { display: none; }
+            .sidebar nav a { justify-content: center; padding: 14px 0; }
+            .logout-btn { padding: 12px 0; font-size: 0.9rem; }
+        }
+        @media (max-width: 600px) {
+            .main { padding: 24px 2vw; }
+            .notes-section { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="user">
+            <div class="avatar"><i class="fa fa-user"></i></div>
+            <div class="username">{{ user.username }}</div>
+        </div>
+        <nav>
+            <a href="{% url 'dashboard' %}" class="{% if request.path == '/dashboard/' %}active{% endif %}"><i class="fa fa-home"></i> <span>Dashboard</span></a>
+            <a href="{% url 'my_notes' %}" class="{% if request.path == '/my_notes/' %}active{% endif %}"><i class="fa fa-sticky-note"></i> <span>My Notes</span></a>
+            <a href="{% url 'add_note' %}" class="{% if request.path == '/add_note/' %}active{% endif %}"><i class="fa fa-plus"></i> <span>Add Note</span></a>
+        </nav>
+        <form method="post" action="{% url 'logout' %}" style="width:100%;">
+            {% csrf_token %}
+            <button class="logout-btn" type="submit"><i class="fa fa-sign-out-alt"></i> Logout</button>
+        </form>
+    </div>
+    <div class="main">
+        {% block 'content' %}
+
+        {% endblock%}
+    </div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+{% extends 'header.html' %}
+{% block 'content' %}
+    <style>
+        .note-form-container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(200, 180, 255, 0.10);
+            padding: 40px 32px 32px 32px;
+            min-width: 700px;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .note-form-container h2 {
+            color: #a18ab7;
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .note-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: space-between;
+        }
+        .note-form .form-group {
+            flex: 1 1 45%;
+            min-width: 250px;
+            margin-bottom: 0;
+        }
+        .note-form .form-group-full {
+            flex: 1 1 100%;
+        }
+        .note-form label {
+            display: block;
+            margin-bottom: 6px;
+            color: #8fa88f;
+            font-weight: 600;
+        }
+        .note-form input[type="text"],
+        .note-form textarea,
+        .note-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e6d6f3;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            background: #f9f6fb;
+            color: #a18ab7;
+        }
+        .note-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .color-palette {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #e6d6f3;
+            cursor: pointer;
+            transition: border 0.2s;
+            display: inline-block;
+        }
+        .color-option.selected {
+            border: 3px solid #a18ab7;
+        }
+        .note-form button {
+            width: 100%;
+            padding: 12px;
+            background: #a18ab7;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(161, 140, 209, 0.10);
+            transition: background 0.3s;
+            margin-top: 16px;
+        }
+        .note-form button:hover {
+            background: #8d72b1;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #a18ab7;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #8fa88f;
+        }
+        @media (max-width: 900px) {
+            .note-form-container {
+                min-width: 90vw;
+                max-width: 98vw;
+            }
+            .note-form {
+                flex-direction: column;
+                gap: 0;
+            }
+            .note-form .form-group, .note-form .form-group-full {
+                min-width: 100%;
+            }
+        }
+    </style>
+    <div class="note-form-container">
+        <h2>Add a New Note</h2>
+        <form class="note-form" method="post" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="tags">Tag</label>
+                <select id="tags" name="tags">
+                    <option value="">Select a tag</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Ideas">Ideas</option>
+                    <option value="Important">Important</option>
+                </select>
+            </div>
+            <div class="form-group form-group-full">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="color">Color</label>
+                <div class="color-palette">
+                    <input type="hidden" id="color" name="color" value="#fff9c4">
+                    <span class="color-option" data-color="#fff9c4" style="background:#fff9c4;"></span>
+                    <span class="color-option" data-color="#fbc2eb" style="background:#fbc2eb;"></span>
+                    <span class="color-option" data-color="#b7cbb2" style="background:#b7cbb2;"></span>
+                    <span class="color-option" data-color="#a1c4fd" style="background:#a1c4fd;"></span>
+                    <span class="color-option" data-color="#fcb7b7" style="background:#fcb7b7;"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-full">
+                <button type="submit">Add Note</button>
+            </div>
+        </form>
+     </div>
+    <script>
+        // Color palette selection logic
+        const colorOptions = document.querySelectorAll('.color-option');
+        const colorInput = document.getElementById('color');
+        colorOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                colorOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                colorInput.value = this.getAttribute('data-color');
+            });
+        });
+        // Set default selected
+        if (colorOptions.length) colorOptions[0].classList.add('selected');
+    </script>
+{% endblock %} 

@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <style>
+        body {
+            background-image: url("{% static 'loginbg.jpg' %}");
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+        .container {
+            background: #fff0f6;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(200, 180, 255, 0.18);
+            width: 350px;
+            overflow: hidden;
+            position: relative;
+        }
+        .form-container {
+            display: flex;
+            width: 200%;
+            transition: transform 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .form {
+            width: 50%;
+            padding: 40px 30px;
+            box-sizing: border-box;
+        }
+        .form h2 {
+            margin-bottom: 20px;
+            color: #a1c4fd;
+            font-weight: 600;
+        }
+        .form input {
+            width: 100%;
+            padding: 12px 10px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ffe0f0;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.2s;
+        }
+        .form input:focus {
+            border: 1.5px solid #a1c4fd;
+            outline: none;
+        }
+        .form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #fbc2eb, #a1c4fd);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(161, 196, 253, 0.12);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        .form button:hover {
+            background: linear-gradient(90deg, #a1c4fd, #fbc2eb);
+            box-shadow: 0 4px 16px rgba(251, 194, 235, 0.18);
+        }
+        .toggle {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .toggle a {
+            color: #fcb7b7;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        .toggle a:hover {
+            color: #a1c4fd;
+        }
+        /* Animation for switching */
+        .container.active .form-container {
+            transform: translateX(-50%);
+        }
+        @media (max-width: 400px) {
+            .container {
+                width: 100vw;
+                border-radius: 0;
+            }
+            .form {
+                padding: 30px 10px;
+            }
+        }
+    </style>
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="form-container">
+            <!-- Login Form -->
+            <form class="form" id="loginForm"  method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <h2>Login</h2>
+                <input type="email" placeholder="Email" required name="email">
+                <input type="password" placeholder="Password" required name="password">
+                <button type="submit">Login</button>
+                <div class="toggle">
+                    <span>Don't have an account? <a id="showRegister">Register</a></span>
+                </div>
+            </form>
+            <!-- Register Form -->
+            <form class="form" id="registerForm" method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                <h2>Register</h2>
+                <input type="text" placeholder="Name" required name="name">
+                <input type="email" placeholder="Email" required name="email">
+                <input type="password" placeholder="Password" required name="password">
+                <input type="password" placeholder="Confirm Password" required name="confirm_password">
+                <button type="submit">Register</button>
+                <div class="toggle">
+                    <span>Already have an account? <a id="showLogin">Login</a></span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        const container = document.getElementById('container');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+
+        showRegister.onclick = () => {
+            container.classList.add('active');
+        };
+        showLogin.onclick = () => {
+            container.classList.remove('active');
+        };
+
+        // Toastr options for pastel look
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "toastClass": 'toastr pastel-toast'
+        };
+
+        // Add pastel style for toastr
+        $(function() {
+            $('<style>\
+                .pastel-toast {\
+                    background: #fff0f6 !important;\
+                    color: #a18ab7 !important;\
+                    border-radius: 10px !important;\
+                    box-shadow: 0 2px 8px rgba(161, 140, 209, 0.10) !important;\
+                    font-family: \'Segoe UI\', sans-serif !important;\
+                }\
+                .toast-success { background: #b7cbb2 !important; color: #4b5e4b !important; }\
+                .toast-error { background: #fcb7b7 !important; color: #a14b5e !important; }\
+            </style>').appendTo('head');
+        });
+
+        // Validation with Toastr
+        $(document).ready(function() {
+            // Login validation
+            $('#loginForm').on('submit', function(e) {
+                let valid = true;
+                let firstError = '';
+                $(this).find('input').each(function() {
+                    if (!$(this).val()) {
+                        valid = false;
+                        if (!firstError) firstError = 'All fields are required.';
+                    }
+                });
+                if (!valid) {
+                    toastr.error(firstError || 'Please fill in all fields.');
+                    e.preventDefault();
+                }
+            });
+
+            // Register validation
+            $('#registerForm').on('submit', function(e) {
+                let valid = true;
+                let firstError = '';
+                const username = $(this).find('input[name="name"]').val();
+                const email = $(this).find('input[name="email"]').val();
+                const password = $(this).find('input[name="password"]').val();
+                const confirmPassword = $(this).find('input[name="confirm_password"]').val();
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!username) {
+                    valid = false;
+                    firstError = 'Name is required.';
+                } else if (!email) {
+                    valid = false;
+                    firstError = 'Email is required.';
+                } else if (!emailPattern.test(email)) {
+                    valid = false;
+                    firstError = 'Enter a valid email.';
+                } else if (!password) {
+                    valid = false;
+                    firstError = 'Password is required.';
+                } else if (!confirmPassword) {
+                    valid = false;
+                    firstError = 'Please confirm your password.';
+                } else if (password !== confirmPassword) {
+                    valid = false;
+                    firstError = 'Passwords do not match.';
+                }
+
+                if (!valid) {
+                    toastr.error(firstError);
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

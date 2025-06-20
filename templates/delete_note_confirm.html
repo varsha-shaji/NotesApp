@@ -1,0 +1,48 @@
+{% extends 'header.html' %}
+{% block 'content' %}
+<style>
+.delete-confirm-container {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(200, 180, 255, 0.10);
+    padding: 40px 32px 32px 32px;
+    min-width: 350px;
+    max-width: 400px;
+    margin: 60px auto;
+    text-align: center;
+}
+.delete-confirm-container h2 {
+    color: #a18ab7;
+    margin-bottom: 18px;
+}
+.delete-confirm-container p {
+    color: #8fa88f;
+    margin-bottom: 24px;
+}
+.delete-confirm-container button, .delete-confirm-container a {
+    padding: 10px 28px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 8px;
+    cursor: pointer;
+    background: #a18ab7;
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.delete-confirm-container button:hover, .delete-confirm-container a:hover {
+    background: #8d72b1;
+}
+</style>
+<div class="delete-confirm-container">
+    <h2>Delete Note</h2>
+    <p>Are you sure you want to delete the note: <strong>{{ note.title }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+        <a href="{% url 'my_notes' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %} 

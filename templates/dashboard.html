@@ -1,0 +1,101 @@
+{% extends 'header.html' %}
+{% block 'content' %}
+<style>
+.dashboard-section {
+    background: #fff;
+    border-radius: 32px;
+    box-shadow: 0 8px 32px rgba(200, 180, 255, 0.13);
+    padding: 48px 32px 6px 32px;
+    margin: 10px auto 0 auto;
+    max-width: 1100px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.dashboard-stats {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 32px;
+    justify-content: center;
+    margin-top: -100px;
+}
+.stat-card {
+    background: #f9f6fb;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(200, 180, 255, 0.10);
+    padding: 24px 36px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #a18ab7;
+    min-width: 140px;
+    text-align: center;
+}
+.dashboard-actions {
+    margin-bottom: 32px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+}
+.action-btn {
+    background: #a18ab7;
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 20px 48px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(161, 140, 209, 0.10);
+    transition: background 0.2s, transform 0.2s;
+    margin: 0 8px;
+    display: inline-block;
+}
+.action-btn:hover {
+    background: #8d72b1;
+    transform: translateY(-2px) scale(1.03);
+}
+.dashboard-quote {
+    margin-top: 32px;
+    font-size: 1.1rem;
+    color: #8fa88f;
+    text-align: center;
+}
+@media (max-width: 700px) {
+    .dashboard-section {
+        padding: 18px 4vw;
+    }
+    .dashboard-stats {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .dashboard-actions {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .action-btn {
+        width: 100%;
+        padding: 18px 0;
+        font-size: 1.1rem;
+    }
+}
+</style>
+<div class="welcome">Welcome, {{ user.name }}!</div>
+<div class="subtitle">Here are your notes. Start capturing your thoughts and ideas!</div>
+<div class="dashboard-section">
+    <div class="dashboard-stats">
+        <div class="stat-card">Total Notes: {{ total_notes }}</div>
+        <div class="stat-card">Pinned: {{ pinned_notes }}</div>
+        <div class="stat-card">Archived: {{ archived_notes }}</div>
+    </div>
+    <div class="dashboard-actions">
+        <a href="{% url 'add_note' %}" class="action-btn">+ Add Note</a>
+        <a href="{% url 'my_notes' %}" class="action-btn">View All Notes</a>
+    </div>
+    <div class="dashboard-quote">
+        <em>"The shortest pencil is better than the longest memory."</em>
+    </div>
+</div>
+{% endblock %}
+       

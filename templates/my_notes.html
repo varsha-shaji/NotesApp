@@ -1,0 +1,230 @@
+{% extends 'header.html' %}
+{% block 'content' %}
+<style>
+    .title {
+        font-size: 2.5rem;
+        color: #a18ab7;
+        font-weight: 700;
+        margin-bottom: 24px;
+        margin-top: 16px;
+    }
+    .notes-section-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .filter-bar {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 32px;
+        align-items: center;
+        flex-wrap: wrap;
+        background: #fff0f6;
+        padding: 18px 32px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(200, 180, 255, 0.10);
+        width: 100%;
+        max-width: 900px;
+    }
+    .filter-bar select, .filter-bar input[type="checkbox"] {
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #e6d6f3;
+        font-size: 1rem;
+        color: #a18ab7;
+        background: #f9f6fb;
+    }
+    .filter-bar label {
+        color: #8fa88f;
+        font-weight: 600;
+        margin-right: 8px;
+    }
+    .filter-bar button { display: none; }
+    .notes-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .note-card {
+        background: var(--note-bg, #fff);
+        border-radius: 24px;
+        box-shadow: 0 6px 32px rgba(200, 180, 255, 0.18);
+        padding: 32px 24px 24px 24px;
+        border: 2px solid #f0e6f6;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+        transition: box-shadow 0.2s, transform 0.2s;
+        position: relative;
+        overflow: hidden;
+        word-break: break-word;
+        color: #111;
+    }
+    .note-card:hover {
+        box-shadow: 0 12px 40px rgba(200, 180, 255, 0.22);
+        transform: translateY(-6px) scale(1.03);
+    }
+    .note-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #111;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .note-label {
+        display: inline-block;
+        background: #e6d6f3;
+        color: #a18ab7;
+        border-radius: 6px;
+        padding: 2px 8px;
+        font-size: 0.95rem;
+        margin-left: 8px;
+    }
+    .note-pinned {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        color: #fcb7b7;
+        font-size: 1.5rem;
+    }
+    .note-meta {
+        color: #8fa88f;
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    .note-content {
+        color: #222;
+        margin-bottom: 10px;
+        flex: 1;
+        font-size: 1.08rem;
+    }
+    .note-tags {
+        color: #b7cbb2;
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+    .note-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .note-actions form, .note-actions a {
+        display: inline-block;
+        margin: 0;
+    }
+    .note-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 4px 4px;
+        text-decoration: none;
+        box-shadow: 0 2px 8px rgba(161, 140, 209, 0.10);
+        transition: background 0.2s, transform 0.2s;
+        margin: 0 2px 2px 0;
+        cursor: pointer;
+        color: #fff !important;
+        background: #a18ab7;
+        min-width: 32px;
+        min-height: 32px;
+        width: 36px;
+        height: 36px;
+    }
+    .note-btn i {
+        font-size: 1em;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .note-btn.edit { background: #6c63ff; }
+    .note-btn.edit:hover { background: #5548c8; }
+    .note-btn.pin { background: #fbc2eb; color: #a14b5e !important; }
+    .note-btn.pin:hover { background: #fcb7b7; color: #fff !important; }
+    .note-btn.archive { background: #b7cbb2; color: #4b5e4b !important; }
+    .note-btn.archive:hover { background: #8fa88f; color: #fff !important; }
+    .note-btn.delete { background: #fcb7b7; color: #fff !important; }
+    .note-btn.delete:hover { background: #a14b5e; color: #fff !important; }
+    @media (max-width: 1100px) {
+        .notes-list {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 700px) {
+        .notes-list {
+            grid-template-columns: 1fr;
+        }
+        .note-card {
+            padding: 20px 10px 16px 10px;
+        }
+    }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.querySelector('.filter-bar');
+    if (filterForm) {
+        filterForm.querySelectorAll('select, input[type="checkbox"]').forEach(function(el) {
+            el.addEventListener('change', function() {
+                filterForm.submit();
+            });
+        });
+    }
+});
+</script>
+<div class="title">My Notes</div>
+<div class="notes-section-wrapper">
+    <form method="get" class="filter-bar">
+        <label for="tag-filter">Tag:</label>
+        <select id="tag-filter" name="tag">
+            <option value="">All</option>
+            <option value="Work" {% if request.GET.tag == 'Work' %}selected{% endif %}>Work</option>
+            <option value="Personal" {% if request.GET.tag == 'Personal' %}selected{% endif %}>Personal</option>
+            <option value="Ideas" {% if request.GET.tag == 'Ideas' %}selected{% endif %}>Ideas</option>
+            <option value="Important" {% if request.GET.tag == 'Important' %}selected{% endif %}>Important</option>
+        </select>
+        <label><input type="checkbox" name="pinned" value="1" {% if request.GET.pinned %}checked{% endif %}> Pinned</label>
+        <label><input type="checkbox" name="archived" value="1" {% if request.GET.archived %}checked{% endif %}> Archived</label>
+    </form>
+    <div class="notes-list">
+        {% if notes %}
+            {% for note in notes %}
+                <div class="note-card" style="--note-bg: {{ note.color|default:'#fff' }};">
+                    {% if note.pinned %}<span class="note-pinned" title="Pinned"><i class="fa fa-thumbtack"></i></span>{% endif %}
+                    <div class="note-title">{{ note.title }} {% if note.archived %}<span class="note-label">Archived</span>{% endif %}</div>
+                    <div class="note-meta">Created: {{ note.created_at|date:"M d, Y H:i" }}</div>
+                    <div class="note-content">{{ note.content }}</div>
+                    {% if note.tags %}
+                    <div class="note-tags">Tag: {{ note.tags }}</div>
+                    {% endif %}
+                    <div class="note-actions">
+                        <a href="{% url 'edit_note' note.id %}" class="note-btn edit" title="Edit"><i class="fa fa-edit"></i></a>
+                        <form method="post" action="{% url 'toggle_pin' note.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="note-btn pin" title="{% if note.pinned %}Unpin{% else %}Pin{% endif %}"><i class="fa fa-thumbtack"></i></button>
+                        </form>
+                        <form method="post" action="{% url 'toggle_archive' note.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="note-btn archive" title="{% if note.archived %}Unarchive{% else %}Archive{% endif %}"><i class="fa fa-archive"></i></button>
+                        </form>
+                        <a href="{% url 'delete_note' note.id %}" class="note-btn delete" title="Delete"><i class="fa fa-trash"></i></a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color:#b7cbb2; text-align:center; width:100%;">No notes found. Click "Add Note" to create your first note!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
